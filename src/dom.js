@@ -19,3 +19,37 @@ const renderProjects = (manager) => {
     }
 
 }
+const renderTodos = (project) => {
+    const current_title = document.getElementById('current-project-title');
+    current_title.textContent = project.name;
+    const todos_list = document.getElementById('todos-list');
+    todos_list.textContent = "";
+    const tasks = project.tasks;
+    for (let index = 0; index < tasks.length; index++) {
+        const task = document.createElement('div');
+        const title = document.createElement('h3');
+        const dueDate = document.createElement('h4');
+        const priority = document.createElement('h4');
+        const description = document.createElement('p');
+        const isCompleted = document.createElement('button');
+        const deleteTask = document.createElement('button');
+        title.textContent = tasks[index].title;
+        dueDate.textContent = tasks[index].dueDate;
+        priority.textContent = tasks[index].priority;
+        description.textContent = tasks[index].description;
+        isCompleted.classList.add("completed");
+        deleteTask.classList.add('delete-task');
+        if (tasks[index].completed === true)
+            isCompleted.textContent = "☑️";
+        else isCompleted.textContent = "🔳";
+        deleteTask.textContent="X";
+        task.appendChild(title);
+        task.appendChild(dueDate);
+        task.appendChild(priority);
+        task.appendChild(description);
+        task.appendChild(isCompleted);
+        task.appendChild(deleteTask);
+        todos_list.appendChild(task);
+
+    }
+}
