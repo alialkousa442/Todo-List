@@ -53,3 +53,30 @@ const renderTodos = (project) => {
 
     }
 }
+
+
+
+const add_project=document.getElementById('add-project-btn');
+const add_task=document.getElementById('add-task-btn');
+const form_project=document.getElementById('add-project-form');
+const form_task=document.getElementById('add-todo-form');
+const cancel_project=document.getElementById('cancel-project-btn');
+const cancel_task=document.getElementById('cancel-task-btn');
+ 
+const openModalProject=()=> {
+    form_project.showModal();
+}
+add_project.addEventListener("click",openModalProject);
+const cancelModalProject=()=>{
+    form_project.close();
+}
+cancel_project.addEventListener("click",cancelModalProject);
+
+const openModalTask=()=> {
+    form_task.showModal();
+}
+add_task.addEventListener("click",openModalTask);
+const cancelModalTask=()=>{
+    form_task.close();
+}
+cancel_task.addEventListener("click",cancelModalTask);
