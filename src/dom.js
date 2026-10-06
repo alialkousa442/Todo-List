@@ -79,4 +79,17 @@ add_task.addEventListener("click",openModalTask);
 const cancelModalTask=()=>{
     form_task.close();
 }
-cancel_task.addEventListener("click",cancelModalTask);
+cancel_task.addEventListener("click",cancelModalTask); 
+
+
+const project_form=document.getElementById('add-project');
+const project_name=document.getElementById('project-name-input');
+const readFormProject=(e)=>{
+    e.preventDefault();
+    const rProjectName=project_name.value;
+    manager.addProject(rProjectName);
+    renderProjects(manager);
+    project_form.reset();
+    form_project.close();
+}
+
