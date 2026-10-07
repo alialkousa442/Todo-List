@@ -7,14 +7,18 @@ const renderProjects = (manager) => {
     for (let index = 0; index < projects.length; index++) {
         const list = document.createElement('li');
         list.textContent = projects[index].name;
+        list.setAttribute('data-index', index);
+
         if (projects[index] === manager.getCurrentProject()) {
             list.classList.add('active')
         }
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = '🗑️';
+        deleteBtn.classList.add('delete-project');
         if (projects[index].name != 'Default') {
             list.appendChild(deleteBtn);
         }
+        deleteBtn.setAttribute('data-index', index);
         projects_list.appendChild(list);
 
 
@@ -29,12 +33,15 @@ const renderTodos = (project) => {
     const tasks = project.tasks;
     for (let index = 0; index < tasks.length; index++) {
         const task = document.createElement('div');
+        task.setAttribute('data-index', index);
         const title = document.createElement('h3');
         const dueDate = document.createElement('h4');
         const priority = document.createElement('h4');
         const description = document.createElement('p');
         const isCompleted = document.createElement('button');
+        isCompleted.setAttribute('data-index', index);
         const deleteTask = document.createElement('button');
+        deleteTask.setAttribute('data-index', index);
         title.textContent = tasks[index].title;
         dueDate.textContent = tasks[index].dueDate;
         priority.textContent = tasks[index].priority;
@@ -57,64 +64,127 @@ const renderTodos = (project) => {
 }
 
 
+const modal = () => {
+    const add_project = document.getElementById('add-project-btn');
+    const add_task = document.getElementById('add-task-btn');
+    const form_project = document.getElementById('add-project-form');
+    const form_task = document.getElementById('add-todo-form');
+    const cancel_project = document.getElementById('cancel-project-btn');
+    const cancel_task = document.getElementById('cancel-task-btn');
 
-const add_project = document.getElementById('add-project-btn');
-const add_task = document.getElementById('add-task-btn');
-const form_project = document.getElementById('add-project-form');
-const form_task = document.getElementById('add-todo-form');
-const cancel_project = document.getElementById('cancel-project-btn');
-const cancel_task = document.getElementById('cancel-task-btn');
+    const openModalProject = () => {
+        form_project.showModal();
+    }
+    add_project.addEventListener("click", openModalProject);
+    const cancelModalProject = () => {
+        form_project.close();
+    }
+    cancel_project.addEventListener("click", cancelModalProject);
 
-const openModalProject = () => {
-    form_project.showModal();
-}
-add_project.addEventListener("click", openModalProject);
-const cancelModalProject = () => {
-    form_project.close();
-}
-cancel_project.addEventListener("click", cancelModalProject);
+    const openModalTask = () => {
+        form_task.showModal();
+    }
+    add_task.addEventListener("click", openModalTask);
+    const cancelModalTask = () => {
+        form_task.close();
+    }
+    cancel_task.addEventListener("click", cancelModalTask);
 
-const openModalTask = () => {
-    form_task.showModal();
-}
-add_task.addEventListener("click", openModalTask);
-const cancelModalTask = () => {
-    form_task.close();
-}
-cancel_task.addEventListener("click", cancelModalTask);
-
-
-
-
-const project_form = document.getElementById('add-project');
-const project_name = document.getElementById('project-name-input');
-const readFormProject = (e) => {
-    e.preventDefault();
-    const rProjectName = project_name.value;
-    manager.addProject(rProjectName);
-    renderProjects(manager);
-    project_form.reset();
-    form_project.close();
 }
 
 
 
 
-const todo_form = document.getElementById('add-todo');
-const todo_title = document.getElementById('todo-title-input');
-const todo_description = document.getElementById('todo-desc-input');
-const todo_date = document.getElementById('todo-date-input');
-const todo_priority = document.getElementById('todo-priority-select');
-const readFormTask = (e) => {
-    e.preventDefault();
-    const rTaskTitle=todo_title.value;
-    const rTodoDescription=todo_description.value;
-    const rTodoDate=todo_date.value;
-    const rTodoPriority=todo_priority.value;
-    const newTask=new Todo(rTaskTitle,rTodoDescription,rTodoDate,rTodoPriority);
-    manager.getCurrentProject().addTask(newTask);
-    renderTodos(manager.getCurrentProject());
-    todo_form.reset();
-    form_task.close();
-  
+const setupFormEvents = (manager) => {
+    const project_form = document.getElementById('add-project');
+    const form_project = document.getElementById('add-project-form');
+
+    const project_name = document.getElementById('project-name-input');
+    const readFormProject = (e) => {
+        e.preventDefault();
+        const rProjectName = project_name.value;
+        manager.addProject(rProjectName);
+        renderProjects(manager);
+        project_form.reset();
+        form_project.close();
+    }
+
+
+
+
+    const todo_form = document.getElementById('add-todo');
+    const form_task = document.getElementById('add-todo-form');
+    const todo_title = document.getElementById('todo-title-input');
+    const todo_description = document.getElementById('todo-desc-input');
+    const todo_date = document.getElementById('todo-date-input');
+    const todo_priority = document.getElementById('todo-priority-select');
+    const readFormTask = (e) => {
+        e.preventDefault();
+        const rTaskTitle = todo_title.value;
+        const rTodoDescription = todo_description.value;
+        const rTodoDate = todo_date.value;
+        const rTodoPriority = todo_priority.value;
+        const newTask = new Todo(rTaskTitle, rTodoDescription, rTodoDate, rTodoPriority);
+        manager.getCurrentProject().addTask(newTask);
+        renderTodos(manager.getCurrentProject());
+        todo_form.reset();
+        form_task.close();
+
+    }
+    project_form.addEventListener("submit", readFormProject);
+    todo_form.addEventListener("submit", readFormTask);
+
 }
+
+
+
+
+const setupProjectEvents = (manager) => {
+    const projects_list = document.getElementById('projects-list');
+    const clickeP = (e) => {
+        if (e.target.classList.contains('delete-project')) {
+            const index = Number(e.target.getAttribute('data-index'));
+            manager.deleteProject(index);
+            renderProjects(manager);
+            renderTodos(manager.getCurrentProject());
+            return;
+        }
+
+        const li = e.target.closest('li');
+        if (li && li.hasAttribute('data-index')) {
+            const index = Number(li.getAttribute('data-index'));
+            manager.setCurrentProject(index);
+            renderProjects(manager);
+            renderTodos(manager.getCurrentProject());
+
+
+        }
+
+    }
+    projects_list.addEventListener("click", clickeP)
+
+}
+const setupTodoEvents = (manager) => {
+    console.log("هاد هو المانجر اللي وصل للـ DOM:", manager);
+    const tasks_list = document.getElementById('todos-list');
+    const clickT = (e) => {
+        const indext = Number(e.target.getAttribute('data-index'));
+        if (e.target.classList.contains('completed')) {
+            manager.getCurrentProject().tasks[indext].toggleComplete();
+            renderTodos(manager.getCurrentProject());
+        }
+        if (e.target.classList.contains('delete-task')) {
+            manager.getCurrentProject().deleteTask(indext);
+            renderTodos(manager.getCurrentProject());
+        }
+    }
+    tasks_list.addEventListener("click", clickT);
+}
+export { 
+    renderProjects, 
+    renderTodos, 
+    setupProjectEvents, 
+    setupTodoEvents, 
+    modal, 
+    setupFormEvents 
+};

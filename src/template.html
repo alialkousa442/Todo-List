@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+</head>
+
+<body>
+    <div id="app">
+        <aside class="sidebar">
+            <h2>Projects</h2>
+            <button type="button" id="add-project-btn">Add New Project</button>
+
+            <ul id="projects-list"></ul>
+
+        </aside>
+        <main class="todo-display">
+            <header class="project-header">
+                <h1 id="current-project-title">Default</h1>
+            </header>
+            <button type="button" id="add-task-btn"> Add New Task</button>
+            <div id="todos-list"></div>
+        </main>
+        <dialog id="add-project-form">
+            <form id="add-project">
+                <input type="text" id="project-name-input" placeholder="New Project..." required>
+                <button type="submit">Add Project</button>
+                <button id="cancel-project-btn" type="button">Cancel </button>
+            </form>
+
+        </dialog>
+        <dialog id="add-todo-form">
+            <form id="add-todo">
+                <input type="text" id="todo-title-input" placeholder="Task title..." required>
+                <input type="text" id="todo-desc-input" placeholder="Description...">
+                <input type="date" id="todo-date-input">
+                <select id="todo-priority-select">
+                    <option value="low">Low</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="high">High</option>
+                </select>
+                <button type="submit">Add Task</button>
+                <button id="cancel-task-btn" type="button">Cancel </button>
+            </form>
+        </dialog>
+
+    </div>
+</body>
+
+</html>

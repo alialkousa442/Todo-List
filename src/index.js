@@ -1,7 +1,15 @@
-import { Todo } from "./Logic";
-import { saveData } from "./storage";
-import { loadData } from "./storage";
+import { renderProjects, 
+    renderTodos, 
+    setupProjectEvents, 
+    setupTodoEvents, 
+    modal, 
+    setupFormEvents } from "./dom";
+import { Todo,Project,ProjectManager } from "./Logic";
+const manager=new ProjectManager();
+renderProjects(manager);
+renderTodos(manager.getCurrentProject());
+setupProjectEvents(manager);
+setupTodoEvents(manager);
 
-const app=loadData();
-console.log(app.getProjects());
-
+modal();
+setupFormEvents(manager);
