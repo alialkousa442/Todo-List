@@ -5,7 +5,8 @@ import { renderProjects,
     modal, 
     setupFormEvents } from "./dom";
 import { Todo,Project,ProjectManager } from "./Logic";
-const manager=new ProjectManager();
+import { loadData } from "./storage";
+const manager=loadData();
 renderProjects(manager);
 renderTodos(manager.getCurrentProject());
 setupProjectEvents(manager);

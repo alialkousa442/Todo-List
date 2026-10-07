@@ -1,4 +1,5 @@
 import { Todo } from "./Logic";
+import { saveData,loadData } from "./storage";
 
 const renderProjects = (manager) => {
     const projects_list = document.getElementById('projects-list');
@@ -105,6 +106,7 @@ const setupFormEvents = (manager) => {
         const rProjectName = project_name.value;
         manager.addProject(rProjectName);
         renderProjects(manager);
+        saveData(manager);
         project_form.reset();
         form_project.close();
     }
@@ -127,6 +129,7 @@ const setupFormEvents = (manager) => {
         const newTask = new Todo(rTaskTitle, rTodoDescription, rTodoDate, rTodoPriority);
         manager.getCurrentProject().addTask(newTask);
         renderTodos(manager.getCurrentProject());
+        saveData(manager);
         todo_form.reset();
         form_task.close();
 
@@ -147,6 +150,7 @@ const setupProjectEvents = (manager) => {
             manager.deleteProject(index);
             renderProjects(manager);
             renderTodos(manager.getCurrentProject());
+            saveData(manager)
             return;
         }
 
@@ -156,6 +160,7 @@ const setupProjectEvents = (manager) => {
             manager.setCurrentProject(index);
             renderProjects(manager);
             renderTodos(manager.getCurrentProject());
+            saveData(manager)
 
 
         }
@@ -172,10 +177,12 @@ const setupTodoEvents = (manager) => {
         if (e.target.classList.contains('completed')) {
             manager.getCurrentProject().tasks[indext].toggleComplete();
             renderTodos(manager.getCurrentProject());
+            saveData(manager);
         }
         if (e.target.classList.contains('delete-task')) {
             manager.getCurrentProject().deleteTask(indext);
             renderTodos(manager.getCurrentProject());
+            saveData(manager);
         }
     }
     tasks_list.addEventListener("click", clickT);
