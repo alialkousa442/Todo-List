@@ -1,6 +1,8 @@
 import { Todo } from "./Logic";
-import { saveData,loadData } from "./storage";
-
+import { saveData, loadData } from "./storage";
+let editIndex = null;
+const submit = document.getElementById('sub');
+submit.textContent = "Add Task";
 const renderProjects = (manager) => {
     const projects_list = document.getElementById('projects-list');
     projects_list.textContent = "";
@@ -43,22 +45,27 @@ const renderTodos = (project) => {
         isCompleted.setAttribute('data-index', index);
         const deleteTask = document.createElement('button');
         deleteTask.setAttribute('data-index', index);
+        const updateTask = document.createElement('button');
+        updateTask.setAttribute('data-index', index)
         title.textContent = tasks[index].title;
         dueDate.textContent = tasks[index].dueDate;
         priority.textContent = tasks[index].priority;
         description.textContent = tasks[index].description;
         isCompleted.classList.add("completed");
         deleteTask.classList.add('delete-task');
+        updateTask.classList.add('update-task');
         if (tasks[index].completed === true)
             isCompleted.textContent = "☑️";
         else isCompleted.textContent = "🔳";
         deleteTask.textContent = "X";
+        updateTask.textContent = "Update";
         task.appendChild(title);
         task.appendChild(dueDate);
         task.appendChild(priority);
         task.appendChild(description);
         task.appendChild(isCompleted);
         task.appendChild(deleteTask);
+        task.appendChild(updateTask);
         todos_list.appendChild(task);
 
     }
@@ -73,7 +80,11 @@ const modal = () => {
     const cancel_project = document.getElementById('cancel-project-btn');
     const cancel_task = document.getElementById('cancel-task-btn');
 
+
+
+
     const openModalProject = () => {
+
         form_project.showModal();
     }
     add_project.addEventListener("click", openModalProject);
@@ -126,8 +137,17 @@ const setupFormEvents = (manager) => {
         const rTodoDescription = todo_description.value;
         const rTodoDate = todo_date.value;
         const rTodoPriority = todo_priority.value;
-        const newTask = new Todo(rTaskTitle, rTodoDescription, rTodoDate, rTodoPriority);
-        manager.getCurrentProject().addTask(newTask);
+        if (editIndex != null) {
+            const CurrentTask = manager.getCurrentProject().tasks[editIndex];
+            CurrentTask.updateTodo(rTaskTitle, rTodoDescription, rTodoDate, rTodoPriority);
+            editIndex = null;
+        }
+        else {
+            const newTask = new Todo(rTaskTitle, rTodoDescription, rTodoDate, rTodoPriority);
+            manager.getCurrentProject().addTask(newTask);
+
+        }
+
         renderTodos(manager.getCurrentProject());
         saveData(manager);
         todo_form.reset();
@@ -170,6 +190,11 @@ const setupProjectEvents = (manager) => {
 
 }
 const setupTodoEvents = (manager) => {
+    const form_task = document.getElementById('add-todo-form');
+    const todo_title = document.getElementById('todo-title-input');
+    const todo_description = document.getElementById('todo-desc-input');
+    const todo_date = document.getElementById('todo-date-input');
+    const todo_priority = document.getElementById('todo-priority-select');
     console.log("هاد هو المانجر اللي وصل للـ DOM:", manager);
     const tasks_list = document.getElementById('todos-list');
     const clickT = (e) => {
@@ -184,14 +209,28 @@ const setupTodoEvents = (manager) => {
             renderTodos(manager.getCurrentProject());
             saveData(manager);
         }
+        if (e.target.classList.contains('update-task')) {
+            const uTask = manager.getCurrentProject().tasks[indext];
+            todo_title.value = uTask.title;
+            todo_description.value = uTask.description;
+            todo_date.value = uTask.dueDate;
+            todo_priority.value = uTask.priority;
+            editIndex = indext;
+            submit.textContent = "Save Changes";
+
+            form_task.showModal();
+
+
+
+        }
     }
     tasks_list.addEventListener("click", clickT);
 }
-export { 
-    renderProjects, 
-    renderTodos, 
-    setupProjectEvents, 
-    setupTodoEvents, 
-    modal, 
-    setupFormEvents 
+export {
+    renderProjects,
+    renderTodos,
+    setupProjectEvents,
+    setupTodoEvents,
+    modal,
+    setupFormEvents
 };

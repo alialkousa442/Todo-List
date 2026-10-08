@@ -9,6 +9,12 @@ export class Todo {
     toggleComplete() {
         this.completed = !this.completed;
     }
+    updateTodo(newTitle, newdescription, newdueDate, newpriority) {
+        this.title = newTitle;
+        this.description = newdescription;
+        this.dueDate = newdueDate;
+        this.priority = newpriority;
+    }
 }
 export class Project {
     constructor(name) {
