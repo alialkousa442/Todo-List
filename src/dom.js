@@ -94,6 +94,7 @@ const modal = () => {
     cancel_project.addEventListener("click", cancelModalProject);
 
     const openModalTask = () => {
+        submit.textContent="Add Task";
         form_task.showModal();
     }
     add_task.addEventListener("click", openModalTask);
