@@ -36,6 +36,7 @@ const renderTodos = (project) => {
     const tasks = project.tasks;
     for (let index = 0; index < tasks.length; index++) {
         const task = document.createElement('div');
+        task.classList.add('task');
         task.setAttribute('data-index', index);
         const title = document.createElement('h3');
         const dueDate = document.createElement('h4');
@@ -63,9 +64,14 @@ const renderTodos = (project) => {
         task.appendChild(dueDate);
         task.appendChild(priority);
         task.appendChild(description);
-        task.appendChild(isCompleted);
-        task.appendChild(deleteTask);
-        task.appendChild(updateTask);
+        const actionsDiv = document.createElement('div');
+        actionsDiv.classList.add('task-actions');
+
+        actionsDiv.appendChild(isCompleted);
+        actionsDiv.appendChild(deleteTask);
+        actionsDiv.appendChild(updateTask);
+
+        task.appendChild(actionsDiv);
         todos_list.appendChild(task);
 
     }
@@ -94,7 +100,7 @@ const modal = () => {
     cancel_project.addEventListener("click", cancelModalProject);
 
     const openModalTask = () => {
-        submit.textContent="Add Task";
+        submit.textContent = "Add Task";
         form_task.showModal();
     }
     add_task.addEventListener("click", openModalTask);
